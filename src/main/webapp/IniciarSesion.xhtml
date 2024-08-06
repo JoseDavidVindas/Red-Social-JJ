@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Iniciar Sesión</title>
+       <style>
+    body {
+        background-color: #e8f5e9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #2e7d32;
+    }
+
+    .registro-panel {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        width: 350px;
+        color: #2e7d32;
+    }
+
+    .user-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100px;
+        height: 100px;
+        background-image: url('https://img.icons8.com/ios-filled/100/000000/user-male.png');
+        background-size: cover;
+        border-radius: 50%;
+        margin-bottom: 20px;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .registro-panel h\:panelGrid {
+        width: 100%;
+    }
+
+    .registro-panel p\:inputText,
+    .registro-panel p\:password,
+    .registro-panel p\:selectOneMenu {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #c8e6c9;
+        border-radius: 5px;
+    }
+
+    .registro-panel .p\:commandButton {
+        background-color: #ffffff;
+        color: #2e7d32;
+        border: 2px solid #2e7d32;
+        border-radius: 5px;
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .registro-panel .p\:commandButton:hover {
+        background-color: #2e7d32;
+        color: #ffffff;
+    }
+</style>
+
+    </h:head>
+    <h:body>
+        <div class="login-panel">
+            <h2>Iniciar Sesión</h2>
+            <h:form id="loginForm">
+                <p:growl id="growl" life="5000" showDetail="true"/>
+                <p>Correo electrónico: <p:inputText value="#{loginController.usuarioTO.correo}" /></p>
+                <p>Contraseña: <p:password value="#{loginController.usuarioTO.contrasena}" /></p>
+                <div class="buttons">
+                    <p:commandButton value="Ingresar" actionListener="#{loginController.ingresar()}" update="loginForm" />
+                    <p:commandButton value="Registrarse" actionListener="#{loginController.registrar()}" update="loginForm" />
+                </div>
+            </h:form>
+        </div>
+    </h:body>
+</html>
