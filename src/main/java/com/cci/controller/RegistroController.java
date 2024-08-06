@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RegistroController {
     
     private UsuarioTO usuario = new UsuarioTO();
-    private String rol;
+    
 
     // Getters y Setters
     public UsuarioTO getUsuario() {
@@ -31,22 +31,9 @@ public class RegistroController {
     public void setUsuario(UsuarioTO usuario) {
         this.usuario = usuario;
     }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-    
     
     public void registrarUsuario() {
-        if (rol.equals("Estudiante")) {
-            usuario.setRol(1);
-        } else if (rol.equals("Profesor")) {
-            usuario.setRol(2);
-        }
+       
         ServicioUsuario servicioUsuario = new ServicioUsuario();
         boolean registrado = servicioUsuario.insertar(usuario);
         

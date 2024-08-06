@@ -4,8 +4,9 @@
  */
 package com.cci.servicio;
 
+
+
 import com.cci.modelo.UsuarioTO;
-import com.cci.modelo.Rol;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -38,13 +39,10 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
                 int id = rs.getInt("id");
                 String mail = rs.getString("correo");
                 String nom = rs.getString("nombre");
-                int rol = rs.getInt("rol_id");
                 String pass = rs.getString("contrasena");
                 String bio = rs.getString("biografia");
-                String foto = rs.getString("foto_perfil");
 
-                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol,bio);
-                usuarioTORetorno.setFotoPerfil(foto);
+                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, bio);
 
             }
         } catch (Exception e) {
@@ -66,12 +64,11 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
         try {
             Conectar();
 
-            String sql = "INSERT INTO usuario (nombre,correo,contrasena,id_rol) VALUES (?,?,?,?)";
+            String sql = "INSERT INTO usuario (nombre,correo,contrasena) VALUES (?,?,?)";
             stmt = getConexion().prepareStatement(sql);
             stmt.setString(1, t.getNombre());
             stmt.setString(2, t.getCorreo());
             stmt.setString(3, t.getContrasena());
-            stmt.setInt(4, t.getRol());
 
             int filasInsertadas = stmt.executeUpdate();
 
@@ -109,12 +106,9 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
                 int id = rs.getInt("id");
                 String mail = rs.getString("correo");
                 String nom = rs.getString("nombre");
-                int rol = rs.getInt("rol_id");
                 String pass = rs.getString("contrasena");
-                String foto = rs.getString("foto_perfil");
 
-                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol);
-                usuarioTORetorno.setFotoPerfil(foto);
+                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom);
 
             }
         } catch (Exception e) {
@@ -168,26 +162,6 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
         }
     }
 
-    public Boolean actualizarCV(int idUsuario, String urlCV) {
-        PreparedStatement stmt = null;
-        try {
-            Conectar();
-            String sql = "UPDATE usuario SET cv = ? WHERE id = ?";
-            stmt = getConexion().prepareStatement(sql);
-            stmt.setString(1, urlCV);
-            stmt.setInt(2, idUsuario);
-
-            int filasActualizadas = stmt.executeUpdate();
-            return filasActualizadas > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            CerrarStatement(stmt);
-            Desconectar();
-        }
-    }
-
     public List<UsuarioTO> buscarUsuarios(String terminoBusqueda) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -208,13 +182,10 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
                 int id = rs.getInt("id");
                 String mail = rs.getString("correo");
                 String nom = rs.getString("nombre");
-                int rol = rs.getInt("rol_id");
                 String pass = rs.getString("contrasena");
                 String bio = rs.getString("biografia");
-                String foto = rs.getString("foto_perfil");
 
-                UsuarioTO usuarioTO = new UsuarioTO(id, mail, pass, nom, rol,bio);
-                usuarioTO.setFotoPerfil(foto);
+                UsuarioTO usuarioTO = new UsuarioTO(id, mail, pass, nom, bio);
                 usuarios.add(usuarioTO);
             }
         } catch (Exception e) {
@@ -228,67 +199,7 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
         return usuarios;
     }
 
-    public Rol rolPK(int idR) {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        Rol rol = null;
-
-        try {
-
-            Conectar();
-
-            String sql = "SELECT * FROM rol WHERE id = ?";
-            stmt = getConexion().prepareStatement(sql);
-            stmt.setInt(1, idR);
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                int id = rs.getInt("id");
-                String nom = rs.getString("nombre");
-
-                rol = new Rol(id, nom);
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            //Paso 5
-            CerrarResultSet(rs);
-            CerrarStatement(stmt);
-            Desconectar();
-        }
-        return rol;
-    }
-    
-    public boolean actualizarUsuario(UsuarioTO usuario) {
-        PreparedStatement stmt = null;
-        boolean exito = false;
-
-        try {
-                Conectar();
-            String sql = "UPDATE usuario SET nombre = ?, correo = ?, contrasena = ?, biografia = ?, foto_perfil = ? WHERE id = ?";
-            stmt = getConexion().prepareStatement(sql);
-
-            stmt.setString(1, usuario.getNombre());
-            stmt.setString(2, usuario.getCorreo());
-            stmt.setString(3, usuario.getContrasena());
-            stmt.setString(4, usuario.getBiografia());
-            stmt.setString(5, usuario.getFotoPerfil());
-            stmt.setInt(6, usuario.getId());
-
-            int filasAfectadas = stmt.executeUpdate();
-            if (filasAfectadas > 0) {
-                exito = true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            CerrarStatement(stmt);
-            Desconectar();
-        }
-        return exito;
-    }
-    
+  
     @Override
     public Boolean modificar(UsuarioTO t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

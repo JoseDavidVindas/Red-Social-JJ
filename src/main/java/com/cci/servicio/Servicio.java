@@ -21,7 +21,7 @@ public class Servicio {
     private String puerto = "3306";
     private String sid = "red_social_jj";
     private String usuario = "root";
-    private String clave = "Mcwmnj35";
+    private String clave = "adminadmin";
     
     public void Conectar() throws ClassNotFoundException, SQLException{
         

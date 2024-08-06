@@ -4,111 +4,105 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-<h:head>
-    <title>Registro de Usuario</title>
-   <style>
-    body {
-        background-color: #e8f5e9;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: #2e7d32;
-    }
+    <h:head>
+        <title>Registro de Usuario</title>
+        <style>
+            body {
+                background-color: #e8f5e9;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                color: #2e7d32;
+            }
 
-    .registro-panel {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        width: 350px;
-        color: #2e7d32;
-    }
+            .registro-panel {
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                width: 350px;
+                color: #2e7d32;
+            }
 
-    .user-image {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 100px;
-        height: 100px;
-        background-image: url('https://img.icons8.com/ios-filled/100/000000/user.png');
-        background-size: cover;
-        border-radius: 50%;
-        margin-bottom: 20px;
-    }
+            .user-image {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 100px;
+                height: 100px;
+                background-image: url('https://img.icons8.com/ios-filled/100/000000/user.png');
+                background-size: cover;
+                border-radius: 50%;
+                margin-bottom: 20px;
+            }
 
-    .buttons {
-        display: flex;
-        justify-content: space-between;
-    }
+            .buttons {
+                display: flex;
+                justify-content: space-between;
+            }
 
-    .registro-panel h\:panelGrid {
-        width: 100%;
-    }
+            .registro-panel h\:panelGrid {
+                width: 100%;
+            }
 
-    .registro-panel p\:inputText,
-    .registro-panel p\:password,
-    .registro-panel p\:selectOneMenu {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #c8e6c9;
-        border-radius: 5px;
-    }
+            .registro-panel p\:inputText,
+            .registro-panel p\:password,
+            .registro-panel p\:selectOneMenu {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 10px;
+                margin-bottom: 15px;
+                border: 1px solid #c8e6c9;
+                border-radius: 5px;
+            }
 
-    .registro-panel .p\:commandButton {
-        background-color: #ffffff;
-        color: #2e7d32;
-        border: 2px solid #2e7d32;
-        border-radius: 5px;
-        padding: 10px;
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s;
-    }
+            .registro-panel .p\:commandButton {
+                background-color: #ffffff;
+                color: #2e7d32;
+                border: 2px solid #2e7d32;
+                border-radius: 5px;
+                padding: 10px;
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s;
+            }
 
-    .registro-panel .p\:commandButton:hover {
-        background-color: #2e7d32;
-        color: #ffffff;
-    }
-</style>
+            .registro-panel .p\:commandButton:hover {
+                background-color: #2e7d32;
+                color: #ffffff;
+            }
+        </style>
 
-</h:head>
-<h:body>
-    <h:form id="registroForm">
-        <div class="registro-panel">
-            <div class="user-image"></div>
-            <p:messages id="messages"/>
-            <h:panelGrid columns="2" cellpadding="5">
-                <h:outputLabel for="nombre" value="Nombre de Usuario: *"/>
-                <p:inputText id="nombre" value="#{registroController.usuario.nombre}" required="true" requiredMessage="El nombre de usuario es obligatorio." />
+    </h:head>
+    <h:body>
+        <h:form id="registroForm">
+            <div class="registro-panel">
+                <div class="user-image"></div>
+                <p:messages id="messages"/>
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="nombre" value="Nombre de Usuario: *"/>
+                    <p:inputText id="nombre" value="#{registroController.usuario.nombre}" required="true" requiredMessage="El nombre de usuario es obligatorio." />
 
-                <h:outputLabel for="correo" value="Correo Electrónico: *"/>
-                <p:inputText id="correo" value="#{registroController.usuario.correo}" required="true" requiredMessage="El correo electrónico es obligatorio." >
-                    <f:validateRegex pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" />
-                </p:inputText>
+                    <h:outputLabel for="correo" value="Correo Electrónico: *"/>
+                    <p:inputText id="correo" value="#{registroController.usuario.correo}" required="true" requiredMessage="El correo electrónico es obligatorio." >
+                        <f:validateRegex pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" />
+                    </p:inputText>
 
-                <h:outputLabel for="clave" value="Contraseña: *"/>
-                <p:password id="clave" value="#{registroController.usuario.contrasena}" label="Contraseña" feedback="true" required="true" requiredMessage="La contraseña es obligatoria." weakLabel="Débil"
-                    goodLabel="Buena" strongLabel="Fuerte">
-                    <f:validateLength minimum="8"  />
-                </p:password>
+                    <h:outputLabel for="clave" value="Contraseña: *"/>
+                    <p:password id="clave" value="#{registroController.usuario.contrasena}" label="Contraseña" feedback="true" required="true" requiredMessage="La contraseña es obligatoria." weakLabel="Débil"
+                                goodLabel="Buena" strongLabel="Fuerte">
+                        <f:validateLength minimum="8"  />
+                    </p:password>
 
-                <h:outputLabel for="rol" value="Rol: *"/>
-                <p:selectOneMenu id="rol" value="#{registroController.rol}" required="true" requiredMessage="El rol es obligatorio.">
-                    <f:selectItem itemLabel="Seleccione" itemValue=""/>
-                    <f:selectItem itemLabel="Estudiante" itemValue="Estudiante"/>
-                    <f:selectItem itemLabel="Profesor" itemValue="Profesor"/>
-                </p:selectOneMenu>
-            </h:panelGrid>
-            <div class="buttons">
-                <p:commandButton value="Volver" action="#{registroController.volver}" immediate="true"/>
-                <p:commandButton value="Registrar" action="#{registroController.registrarUsuario}" update="messages"/>
+                </h:panelGrid>
+                <div class="buttons">
+                    <p:commandButton value="Volver" action="#{registroController.volver}" immediate="true"/>
+                    <p:commandButton value="Registrar" action="#{registroController.registrarUsuario}" update="messages"/>
+                </div>
             </div>
-        </div>
-    </h:form>
-</h:body>
+        </h:form>
+    </h:body>
 </html>
 

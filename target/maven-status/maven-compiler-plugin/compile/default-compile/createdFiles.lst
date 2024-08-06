@@ -1,6 +1,5 @@
 com\cci\controller\LoginController.class
 com\cci\servicio\CRUD.class
-com\cci\modelo\Rol.class
 com\cci\modelo\UsuarioTO.class
 com\cci\servicio\ServicioUsuario.class
 com\cci\servicio\Servicio.class
