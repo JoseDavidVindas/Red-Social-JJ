@@ -32,7 +32,7 @@ public class LoginController implements Serializable {
         UsuarioTO usuarioTORetorno = servicioUsuario.validarUsuario(this.getUsuarioTO().getCorreo(), this.getUsuarioTO().getContrasena());
         if (usuarioTORetorno != null) {
             this.usuarioTO = usuarioTORetorno;
-            this.redireccionar("/Publicacion.xhtml");
+            this.redireccionar("/PaginaPrincipal.xhtml");
         } else {
             FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campos inválidos", "La clave o correo no son correctos"));
         }
