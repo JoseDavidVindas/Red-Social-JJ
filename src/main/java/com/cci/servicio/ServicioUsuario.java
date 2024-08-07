@@ -7,16 +7,22 @@ package com.cci.servicio;
 
 
 import com.cci.modelo.UsuarioTO;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
 
 /**
  *
  * @author Usuario
  */
+@Named("servicioUsuario")
+@RequestScoped
 public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
 
     public UsuarioTO validarUsuario(String correo, String contrasena) {
@@ -40,9 +46,10 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
                 String mail = rs.getString("correo");
                 String nom = rs.getString("nombre");
                 String pass = rs.getString("contrasena");
-                String bio = rs.getString("biografia");
-
-                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, bio);
+                int rol = rs.getInt("rol");
+                Date fechR = rs.getDate("fecha_registro");
+                int pais = rs.getInt("pais");
+                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol, fechR, pais);
 
             }
         } catch (Exception e) {
@@ -64,12 +71,14 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
         try {
             Conectar();
 
-            String sql = "INSERT INTO usuario (nombre,correo,contrasena) VALUES (?,?,?)";
+            String sql = "INSERT INTO usuario (nombre, correo, contrasena, fecha_registro, rol, pais) VALUES (?,?,?,?,?,?)";
             stmt = getConexion().prepareStatement(sql);
             stmt.setString(1, t.getNombre());
             stmt.setString(2, t.getCorreo());
-            stmt.setString(3, t.getContrasena());
-
+            stmt.setString(3, t.getContrasena());    
+            stmt.setDate(4, new java.sql.Date(System.currentTimeMillis())); // Establece la fecha actual
+            stmt.setInt(5, t.getRol());
+            stmt.setInt(6, t.getPais());
             int filasInsertadas = stmt.executeUpdate();
 
             if (filasInsertadas > 0) {
@@ -88,7 +97,7 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
         }
     }
 
-    public UsuarioTO usuarioPK(int idU) {
+   /* public UsuarioTO usuarioPK(int idU) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         UsuarioTO usuarioTORetorno = null;
@@ -107,8 +116,10 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
                 String mail = rs.getString("correo");
                 String nom = rs.getString("nombre");
                 String pass = rs.getString("contrasena");
-
-                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom);
+                int rol = rs.getInt("rol");
+                Date fechR = rs.getDate("fecha_registro");
+                int pais = rs.getInt("pais");
+                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol, fechR, pais);
 
             }
         } catch (Exception e) {
@@ -120,7 +131,7 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
             Desconectar();
         }
         return usuarioTORetorno;
-    }
+    }*/
 
     public Boolean actualizarBiografia(int idUsuario, String biografia) {
         PreparedStatement stmt = null;
@@ -183,9 +194,10 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
                 String mail = rs.getString("correo");
                 String nom = rs.getString("nombre");
                 String pass = rs.getString("contrasena");
-                String bio = rs.getString("biografia");
-
-                UsuarioTO usuarioTO = new UsuarioTO(id, mail, pass, nom, bio);
+                int rol = rs.getInt("rol");
+                Date fechR = rs.getDate("fecha_registro");
+                int pais = rs.getInt("pais");
+                UsuarioTO usuarioTO = new UsuarioTO(id, mail, pass, nom, rol, fechR, pais);
                 usuarios.add(usuarioTO);
             }
         } catch (Exception e) {

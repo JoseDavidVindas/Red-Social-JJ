@@ -19,22 +19,15 @@ import javax.servlet.http.HttpServletRequest;
 @ManagedBean(name = "registroController")
 @RequestScoped
 public class RegistroController {
-    
+    private int pais;
+    private int rol; //1 para profesor, 2 para estudiante
     private UsuarioTO usuario = new UsuarioTO();
-    
-
-    // Getters y Setters
-    public UsuarioTO getUsuario() {
-        return usuario;
-    }
-    
-    public void setUsuario(UsuarioTO usuario) {
-        this.usuario = usuario;
-    }
     
     public void registrarUsuario() {
        
         ServicioUsuario servicioUsuario = new ServicioUsuario();
+        usuario.setRol(rol);
+        usuario.setPais(pais);
         boolean registrado = servicioUsuario.insertar(usuario);
         
         if (registrado) {
@@ -54,7 +47,35 @@ public class RegistroController {
         }
     }
     
+    
+    
     public void volver() {
         this.redireccionar("/IniciarSesion.xhtml");
     }
+    
+     // Getters y Setters
+    public UsuarioTO getUsuario() {
+        return usuario;
+    }
+    
+    public void setUsuario(UsuarioTO usuario) {
+        this.usuario = usuario;
+    }
+
+    public int getRol() {
+        return rol;
+    }
+
+    public void setRol(int rol) {
+        this.rol = rol;
+    }
+
+    public int getPais() {
+        return pais;
+    }
+
+    public void setPais(int pais) {
+        this.pais = pais;
+    }
+    
 }

@@ -5,6 +5,7 @@
 package com.cci.modelo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,7 +13,7 @@ import javax.persistence.Id;
 
 /**
  *
- * @author Usuario
+ * @author Jefferson
  */
 public class UsuarioTO implements Serializable {
     
@@ -22,26 +23,27 @@ public class UsuarioTO implements Serializable {
     private String correo;
     private String contrasena;
     private String nombre;       
-    private String biografia;  
-    private String fotoPerfil;
+    private int rol;  
+    //private String fotoPerfil;
+    private Date fechaRegistro;
+    private int pais;
+    
 
-    public UsuarioTO(int id, String correo, String contrasena, String nombre) {
+    public UsuarioTO(int id, String correo, String contrasena, String nombre, int rol, Date fechaRegistro, int pais) {
         this.id = id;
         this.correo = correo;
         this.contrasena = contrasena;
         this.nombre = nombre;
+        this.rol = rol;
+        this.fechaRegistro = fechaRegistro;
+        this.pais = pais;
     }
 
-    public UsuarioTO(int id, String correo, String contrasena, String nombre, String biografia) {
-        this.id = id;
-        this.correo = correo;
-        this.contrasena = contrasena;
-        this.nombre = nombre;
-        this.biografia = biografia;
-    }
+    
 
     public UsuarioTO() {
     }
+    
 
     public int getId() {
         return id;
@@ -75,32 +77,50 @@ public class UsuarioTO implements Serializable {
         this.nombre = nombre;
     }
 
-
-    public String getBiografia() {
-        return biografia;
+    public int getRol() {
+        return rol;
     }
 
-    public void setBiografia(String biografia) {
-        this.biografia = biografia;
+    public void setRol(int rol) {
+        this.rol = rol;
     }
 
-    public String getFotoPerfil() {
+    
+
+    /*public String getFotoPerfil() {
         return fotoPerfil;
     }
 
     public void setFotoPerfil(String fotoPerfil) {
         this.fotoPerfil = fotoPerfil;
+    }*/
+
+    public Date getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(Date fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public int getPais() {
+        return pais;
+    }
+
+    public void setPais(int pais) {
+        this.pais = pais;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + this.id;
-        hash = 29 * hash + Objects.hashCode(this.correo);
-        hash = 29 * hash + Objects.hashCode(this.contrasena);
-        hash = 29 * hash + Objects.hashCode(this.nombre);
-        hash = 29 * hash + Objects.hashCode(this.biografia);
-        hash = 29 * hash + Objects.hashCode(this.fotoPerfil);
+        hash = 53 * hash + this.id;
+        hash = 53 * hash + Objects.hashCode(this.correo);
+        hash = 53 * hash + Objects.hashCode(this.contrasena);
+        hash = 53 * hash + Objects.hashCode(this.nombre);
+        hash = 53 * hash + this.rol;
+        hash = 53 * hash + Objects.hashCode(this.fechaRegistro);
+        hash = 53 * hash + this.pais;
         return hash;
     }
 
@@ -119,6 +139,12 @@ public class UsuarioTO implements Serializable {
         if (this.id != other.id) {
             return false;
         }
+        if (this.rol != other.rol) {
+            return false;
+        }
+        if (this.pais != other.pais) {
+            return false;
+        }
         if (!Objects.equals(this.correo, other.correo)) {
             return false;
         }
@@ -128,15 +154,14 @@ public class UsuarioTO implements Serializable {
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
-        
-        if (!Objects.equals(this.biografia, other.biografia)) {
-            return false;
-        }
-        return Objects.equals(this.fotoPerfil, other.fotoPerfil);
+        return Objects.equals(this.fechaRegistro, other.fechaRegistro);
     }
 
     @Override
     public String toString() {
-        return "" + id;
+        return "UsuarioTO{" + "id=" + id + ", correo=" + correo + ", contrasena=" + contrasena + ", nombre=" + nombre + ", rol=" + rol + ", fechaRegistro=" + fechaRegistro + ", pais=" + pais + '}';
     }
+
+   
+    
 }

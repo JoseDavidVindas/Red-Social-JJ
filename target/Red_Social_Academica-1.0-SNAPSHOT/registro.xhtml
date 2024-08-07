@@ -95,6 +95,26 @@
                                 goodLabel="Buena" strongLabel="Fuerte">
                         <f:validateLength minimum="8"  />
                     </p:password>
+                    
+                    <h:outputLabel for="Pais" value="Pais:" />
+        <h:selectOneMenu id="Pais" value="#{registroController.pais}" required="true">
+            <f:selectItem itemValue="1" itemLabel="Argentina" />
+            <f:selectItem itemValue="2" itemLabel="Alemania" />
+            <f:selectItem itemValue="3" itemLabel="Brasil" />
+            <f:selectItem itemValue="4" itemLabel="Costa Rica" />
+            <f:selectItem itemValue="5" itemLabel="Colombia" />
+            <f:selectItem itemValue="6" itemLabel="España" />
+            <f:selectItem itemValue="7" itemLabel="Estados Unidos" />
+            <f:selectItem itemValue="8" itemLabel="Francia" />
+            <f:selectItem itemValue="9" itemLabel="Honduras" />
+            <f:selectItem itemValue="10" itemLabel="Panama" />
+        </h:selectOneMenu>
+                    
+                    <h:outputLabel for="rol" value="Rol:" />
+        <h:selectOneMenu id="rol" value="#{registroController.rol}" required="true">
+            <f:selectItem itemValue="1" itemLabel="Profesor" />
+            <f:selectItem itemValue="2" itemLabel="Estudiante" />
+        </h:selectOneMenu>
 
                 </h:panelGrid>
                 <div class="buttons">
