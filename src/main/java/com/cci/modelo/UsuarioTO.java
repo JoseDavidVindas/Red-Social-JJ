@@ -24,21 +24,23 @@ public class UsuarioTO implements Serializable {
     private String contrasena;
     private String nombre;       
     private int rol;  
-    //private String fotoPerfil;
+    private String fotoPerfil;
     private Date fechaRegistro;
     private int pais;
-    
 
-    public UsuarioTO(int id, String correo, String contrasena, String nombre, int rol, Date fechaRegistro, int pais) {
+    public UsuarioTO(int id, String correo, String contrasena, String nombre, int rol) {
         this.id = id;
         this.correo = correo;
         this.contrasena = contrasena;
         this.nombre = nombre;
         this.rol = rol;
+        this.fotoPerfil = fotoPerfil;
         this.fechaRegistro = fechaRegistro;
         this.pais = pais;
     }
+    
 
+  
     
 
     public UsuarioTO() {
@@ -109,6 +111,14 @@ public class UsuarioTO implements Serializable {
 
     public void setPais(int pais) {
         this.pais = pais;
+    }
+    
+     public String getFotoPerfil() {
+        return fotoPerfil;
+    }
+
+    public void setFotoPerfil(String fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
     }
 
     @Override

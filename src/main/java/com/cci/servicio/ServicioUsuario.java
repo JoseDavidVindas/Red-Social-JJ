@@ -6,6 +6,7 @@ package com.cci.servicio;
 
 
 
+import com.cci.modelo.Rol;
 import com.cci.modelo.UsuarioTO;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -49,7 +50,7 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
                 int rol = rs.getInt("rol");
                 Date fechR = rs.getDate("fecha_registro");
                 int pais = rs.getInt("pais");
-                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol, fechR, pais);
+                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol);
 
             }
         } catch (Exception e) {
@@ -197,7 +198,7 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
                 int rol = rs.getInt("rol");
                 Date fechR = rs.getDate("fecha_registro");
                 int pais = rs.getInt("pais");
-                UsuarioTO usuarioTO = new UsuarioTO(id, mail, pass, nom, rol, fechR, pais);
+                UsuarioTO usuarioTO = new UsuarioTO(id, mail, pass, nom, rol);
                 usuarios.add(usuarioTO);
             }
         } catch (Exception e) {
@@ -209,6 +210,74 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
             Desconectar();
         }
         return usuarios;
+    }
+    
+    public Rol rolPK(int idR) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Rol rol = null;
+
+        try {
+
+            Conectar();
+
+            String sql = "SELECT * FROM rol WHERE id = ?";
+            stmt = getConexion().prepareStatement(sql);
+            stmt.setInt(1, idR);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String nom = rs.getString("nombre");
+
+                rol = new Rol(id, nom);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //Paso 5
+            CerrarResultSet(rs);
+            CerrarStatement(stmt);
+            Desconectar();
+        }
+        return rol;
+    }
+    public UsuarioTO usuarioPK(int idU) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        UsuarioTO usuarioTORetorno = null;
+
+        try {
+
+            Conectar();
+
+            String sql = "SELECT * FROM usuario WHERE id = ?";
+            stmt = getConexion().prepareStatement(sql);
+            stmt.setInt(1, idU);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String mail = rs.getString("correo");
+                String nom = rs.getString("nombre");
+                int rol = rs.getInt("rol_id");
+                String pass = rs.getString("contrasena");
+                String foto = rs.getString("foto_perfil");
+
+                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol);
+                usuarioTORetorno.setFotoPerfil(foto);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //Paso 5
+            CerrarResultSet(rs);
+            CerrarStatement(stmt);
+            Desconectar();
+        }
+        return usuarioTORetorno;
     }
 
   

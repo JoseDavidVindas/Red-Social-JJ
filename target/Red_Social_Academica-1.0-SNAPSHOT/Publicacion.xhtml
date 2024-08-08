@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Publicaciones</title>
+        <style>
+            body {
+                background-color: #e8f5e9;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                color: #2e7d32;
+            }
+
+            .registro-panel {
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                width: 350px;
+                color: #2e7d32;
+            }
+
+            .user-image {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 100px;
+                height: 100px;
+                background-image: url('https://img.icons8.com/ios-filled/100/000000/user-male.png');
+                background-size: cover;
+                border-radius: 50%;
+                margin-bottom: 20px;
+            }
+
+            .buttons {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .registro-panel h\:panelGrid {
+                width: 100%;
+            }
+
+            .registro-panel p\:inputText,
+            .registro-panel p\:password,
+            .registro-panel p\:selectOneMenu {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 10px;
+                margin-bottom: 15px;
+                border: 1px solid #c8e6c9;
+                border-radius: 5px;
+            }
+
+            .registro-panel .p\:commandButton {
+                background-color: #ffffff;
+                color: #2e7d32;
+                border: 2px solid #2e7d32;
+                border-radius: 5px;
+                padding: 10px;
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s;
+            }
+
+            .registro-panel .p\:commandButton:hover {
+                background-color: #2e7d32;
+                color: #ffffff;
+            }
+        </style>
+
+    </h:head>
+    <h:body>
+        <div class="card">
+            <h:form id="mainForm" enctype="multipart/form-data">
+                <p:growl id="messages"/>
+
+                <!-- Botón para abrir el diálogo de crear publicación -->
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <p:commandButton value="Crear Publicacion" icon="pi pi-plus" styleClass="rounded-button" 
+                                     style="margin-top: 20px; margin-left: 10px; background-color: #34495e !important;" 
+                                     actionListener="#{publicacionController.nuevaPublicacion()}" 
+                                     oncomplete="PF('dlg').show();" update="createDialog"/>
+                </div>
+
+                <!-- Diálogo para crear publicación -->
+                <p:dialog id="createDialog" header="Crear Publicación" widgetVar="dlg" modal="true" width="600" height="330">
+                    <h:panelGrid columns="1" cellpadding="5" style="width: 100%;">
+                        <h:outputLabel for="description" value="Descripción:" />
+                        <p:inputTextarea id="description" value="#{publicacionController.descripcion}" rows="4" cols="40" style="width: 100%;"/>
+
+                        <h:outputLabel for="categoria" value="Categoría:" />
+                        <p:selectOneMenu id="categoria" value="#{publicacionController.categoriaSeleccionada}">
+                            <f:selectItem itemLabel="Seleccione una categoría" itemValue="" />
+                            <f:selectItems value="#{publicacionController.categorias}" var="categoria" 
+                                           itemLabel="#{categoria.categoria}" itemValue="#{categoria}" />
+                        </p:selectOneMenu>
+
+                        <p:fileUpload id="upl" listener="#{publicacionController.handleFileUploadEvent}" 
+                                      mode="advanced" dragDropSupport="false" multiple="true" 
+                                      update=":mainForm:messages,files1,files2" 
+                                      accept=".jpg,.jpeg,.png,.gif,.pdf,.docx" 
+                                      style="width: 100%;" fileLimit="10"/>
+
+                        <h:panelGrid columns="1" id="files1">
+                            <h:outputText value="Imagenes cargadas: #{publicacionController.imagenes.size()}" 
+                                          rendered="#{not empty publicacionController.imagenes}" />
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="1" id="files2">
+                            <h:outputText value="Documentos cargados: #{publicacionController.documentos.size()}" 
+                                          rendered="#{not empty publicacionController.documentos}" />
+                        </h:panelGrid>
+
+                        <p:commandButton value="Publicar" actionListener="#{publicacionController.crearPublicacion}" 
+                                         oncomplete="PF('dlg').hide();" update=":mainForm:messages :mainForm:publicaciones"/>
+                    </h:panelGrid>
+                </p:dialog>
+
+                <!-- Mostrar publicaciones -->
+                <h:panelGrid columns="1" id="publicaciones" styleClass="feed-container">
+                    <ui:repeat value="#{publicacionController.publicaciones}" var="publicacion">
+                        <h:panelGroup layout="block" styleClass="post">
+                            <h:panelGroup layout="block" styleClass="post-header">
+                                <h:panelGroup layout="inline" styleClass="profile-pic-container">
+                                    <p:graphicImage value="#{empty publicacion.usuario.fotoPerfil ? 'http://localhost:8080/Red_Social_Academica/archivos/imagenes/anonimo.jpg' : publicacion.usuario.fotoPerfil}" 
+                                                    styleClass="profile-pic" />
+                                </h:panelGroup>
+                                <h:outputText value="#{publicacion.usuario.nombre}" styleClass="author-name"/>
+                                <h:outputText value="#{publicacion.fecha_publicacion}" styleClass="timestamp"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup layout="block" styleClass="post-content">
+                                <h:outputText value="#{publicacion.categoria}" styleClass="post-category"/>
+                                <h:outputText value="#{publicacion.descripcion}" escape="false" styleClass="post-text"/>
+
+                                <div class="card">
+                                    <p:galleria value="#{publicacion.imagenes}" var="imagen" numVisible="5" 
+                                                responsiveOptions="#{publicacionController.responsiveOptions1}"
+                                                showThumbnails="false" showIndicators="true" 
+                                                changeItemOnIndicatorHover="true" style="max-width: 640px">
+                                        <p:graphicImage value="#{imagen.url}" alt="#{photo}" style="width: 100%; display: block;" />
+                                    </p:galleria>
+                                </div>    
+                            </h:panelGroup>
+
+                            <div class="post-document">
+                                <ui:repeat value="#{publicacion.documentos}" var="documento">
+                                    <div class="document-container">
+                                        <h:outputLink value="#{documento.url}" target="_blank" styleClass="document-link">
+                                            <h:outputText value="#{publicacionController.obtenerNombreDocumento(documento.url)}" />
+                                            <i class="#{publicacionController.obtenerIconoDocumento(documento.url)}"></i>
+                                        </h:outputLink>
+                                    </div>
+                                </ui:repeat>
+                            </div>
+
+                            <h:panelGroup layout="block" styleClass="post-actions">
+                                <p:commandButton icon="pi pi-star" 
+                                                 action="#{publicacionController.agregarFavoritos(publicacion)}"
+                                                 update=":mainForm:messages"/>
+
+                                <p:commandButton icon="pi pi-download" 
+                                                 action="#{publicacionController.descargarDocumentos(publicacion)}"
+                                                 ajax="false" 
+                                                 rendered="#{not empty publicacion.documentos or not empty publicacion.imagenes}"/>                            
+
+                                <p:commandButton icon="pi pi-thumbs-up" 
+                                                 action="#{publicacionController.likePublicacion(publicacion)}"
+                                                 update=":mainForm:messages" title="Like" />
+
+                                <p:commandButton icon="pi pi-thumbs-down" 
+                                                 action="#{publicacionController.dislikePublicacion(publicacion)}"
+                                                 update=":mainForm:messages" title="Dislike" />
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </ui:repeat>
+                </h:panelGrid>
+            </h:form>
+        </div>
+    </h:body>
+
+
+</html>
+
