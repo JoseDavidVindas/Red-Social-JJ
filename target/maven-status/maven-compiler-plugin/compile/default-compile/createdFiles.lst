@@ -2,7 +2,10 @@ com\cci\controller\LoginController.class
 com\cci\servicio\CRUD.class
 com\cci\controller\BuscarUsuarioController.class
 com\cci\controller\PaginaPrincipalController.class
+com\cci\modelo\PaisConverter.class
+com\cci\modelo\PaisTO.class
 com\cci\modelo\UsuarioTO.class
 com\cci\servicio\ServicioUsuario.class
+com\cci\servicio\ServicioPais.class
 com\cci\servicio\Servicio.class
 com\cci\controller\RegistroController.class

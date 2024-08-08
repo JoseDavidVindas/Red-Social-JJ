@@ -8,8 +8,12 @@ package com.cci.controller;
  *
  * @author Jose
  */
+import com.cci.modelo.PaisTO;
 import com.cci.modelo.UsuarioTO;
+import com.cci.servicio.ServicioPais;
 import com.cci.servicio.ServicioUsuario;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.enterprise.context.RequestScoped;
@@ -19,15 +23,22 @@ import javax.servlet.http.HttpServletRequest;
 @ManagedBean(name = "registroController")
 @RequestScoped
 public class RegistroController {
-    private int pais;
+    private List<PaisTO> paises;
+    private PaisTO paisSeleccionado;
     private int rol; //1 para profesor, 2 para estudiante
     private UsuarioTO usuario = new UsuarioTO();
+    
+   @PostConstruct
+    public void init() {
+        ServicioPais servicioPais = new ServicioPais();
+        paises = servicioPais.obtenerTodosLosPaises();
+    }
     
     public void registrarUsuario() {
        
         ServicioUsuario servicioUsuario = new ServicioUsuario();
         usuario.setRol(rol);
-        usuario.setPais(pais);
+        usuario.setPais(paisSeleccionado);
         boolean registrado = servicioUsuario.insertar(usuario);
         
         if (registrado) {
@@ -54,12 +65,21 @@ public class RegistroController {
     }
     
      // Getters y Setters
-    public UsuarioTO getUsuario() {
-        return usuario;
+
+    public List<PaisTO> getPaises() {
+        return paises;
     }
-    
-    public void setUsuario(UsuarioTO usuario) {
-        this.usuario = usuario;
+
+    public void setPaises(List<PaisTO> paises) {
+        this.paises = paises;
+    }
+
+    public PaisTO getPaisSeleccionado() {
+        return paisSeleccionado;
+    }
+
+    public void setPaisSeleccionado(PaisTO paisSeleccionado) {
+        this.paisSeleccionado = paisSeleccionado;
     }
 
     public int getRol() {
@@ -70,12 +90,13 @@ public class RegistroController {
         this.rol = rol;
     }
 
-    public int getPais() {
-        return pais;
+    public UsuarioTO getUsuario() {
+        return usuario;
     }
 
-    public void setPais(int pais) {
-        this.pais = pais;
+    public void setUsuario(UsuarioTO usuario) {
+        this.usuario = usuario;
     }
+   
     
 }

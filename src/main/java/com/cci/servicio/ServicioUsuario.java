@@ -6,13 +6,16 @@ package com.cci.servicio;
 
 
 
+import com.cci.modelo.PaisTO;
 import com.cci.modelo.UsuarioTO;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Named;
@@ -21,9 +24,10 @@ import javax.inject.Named;
  *
  * @author Usuario
  */
-@Named("servicioUsuario")
-@RequestScoped
+
 public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
+    
+    private ServicioPais servicioPais = new ServicioPais();
 
     public UsuarioTO validarUsuario(String correo, String contrasena) {
 
@@ -48,9 +52,9 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
                 String pass = rs.getString("contrasena");
                 int rol = rs.getInt("rol");
                 Date fechR = rs.getDate("fecha_registro");
-                int pais = rs.getInt("pais");
+                int idPais = rs.getInt("fk_pais");
+                PaisTO pais = servicioPais.obtenerPaisPorId(idPais);
                 usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol, fechR, pais);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,14 +75,14 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
         try {
             Conectar();
 
-            String sql = "INSERT INTO usuario (nombre, correo, contrasena, fecha_registro, rol, pais) VALUES (?,?,?,?,?,?)";
+            String sql = "INSERT INTO usuario (nombre, correo, contrasena, fecha_registro, rol, fk_pais) VALUES (?,?,?,?,?,?)";
             stmt = getConexion().prepareStatement(sql);
             stmt.setString(1, t.getNombre());
             stmt.setString(2, t.getCorreo());
             stmt.setString(3, t.getContrasena());    
             stmt.setDate(4, new java.sql.Date(System.currentTimeMillis())); // Establece la fecha actual
             stmt.setInt(5, t.getRol());
-            stmt.setInt(6, t.getPais());
+            stmt.setInt(6, t.getPais() != null ? t.getPais().getId() : null); // Establece el país si está disponible
             int filasInsertadas = stmt.executeUpdate();
 
             if (filasInsertadas > 0) {
@@ -173,7 +177,7 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
         }
     }
 
-    public List<UsuarioTO> buscarUsuarios(String terminoBusqueda) {
+    /*public List<UsuarioTO> buscarUsuarios(String terminoBusqueda) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         List<UsuarioTO> usuarios = new ArrayList<>();
@@ -196,7 +200,8 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
                 String pass = rs.getString("contrasena");
                 int rol = rs.getInt("rol");
                 Date fechR = rs.getDate("fecha_registro");
-                int pais = rs.getInt("pais");
+                int idPais = rs.getInt("fk_pais");
+                PaisTO pais = servicioPais.obtenerPaisPorId(idPais);
                 UsuarioTO usuarioTO = new UsuarioTO(id, mail, pass, nom, rol, fechR, pais);
                 usuarios.add(usuarioTO);
             }
@@ -209,9 +214,80 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
             Desconectar();
         }
         return usuarios;
-    }
+    }*/
+    
+    public List<UsuarioTO> buscarUsuarios(String terminoBusqueda) {
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    List<UsuarioTO> usuarios = new ArrayList<>();
 
-  
+    try {
+        Conectar();
+
+        // La consulta ahora se une a la tabla 'pais' para obtener la URL de la imagen de la bandera
+        String sql = "SELECT u.*, p.imagen, p.nombre FROM usuario u " +
+                     "JOIN pais p ON u.fk_pais = p.id " +
+                     "WHERE u.nombre LIKE ?";
+        stmt = getConexion().prepareStatement(sql);
+        String termino = "%" + terminoBusqueda + "%";
+        stmt.setString(1, termino);
+        rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String mail = rs.getString("correo");
+            String nom = rs.getString("nombre");
+            String pass = rs.getString("contrasena");
+            int rol = rs.getInt("rol");
+            Date fechR = rs.getDate("fecha_registro");
+            String imagen = rs.getString("imagen");  // Obtiene la URL de la imagen de la bandera
+            String nombrePais = rs.getString("p.nombre");
+            PaisTO pais = new PaisTO(rs.getInt("fk_pais"), nombrePais, imagen);
+            UsuarioTO usuarioTO = new UsuarioTO(id, mail, pass, nom, rol, fechR, pais);
+            usuarios.add(usuarioTO);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        CerrarResultSet(rs);
+        CerrarStatement(stmt);
+        Desconectar();
+    }
+    return usuarios;
+}
+
+    
+    public void actualizarUsuariosConPais() {
+    String sql = "UPDATE usuario SET fk_pais = ? WHERE id = ?";
+    
+    try (PreparedStatement ps = getConexion().prepareStatement(sql)) {
+        // Establece el ID del país que deseas asignar (ejemplo: Argentina con ID 1)
+        int idPais = 1;
+
+        // Consulta todos los usuarios que necesiten ser actualizados
+        String selectSql = "SELECT id FROM usuario WHERE fk_pais IS NULL";
+        try (PreparedStatement selectStmt = getConexion().prepareStatement(selectSql);
+             ResultSet rs = selectStmt.executeQuery()) {
+
+            // Recorre todos los usuarios que necesitan actualización
+            while (rs.next()) {
+                int usuarioId = rs.getInt("id");
+                
+                // Actualiza el país para cada usuario
+                ps.setInt(1, idPais); // Establece el ID del país
+                ps.setInt(2, usuarioId); // Establece el ID del usuario
+                
+                int filasActualizadas = ps.executeUpdate();
+                if (filasActualizadas > 0) {
+                    System.out.println("Usuario con ID " + usuarioId + " actualizado con país ID " + idPais);
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
     @Override
     public Boolean modificar(UsuarioTO t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
