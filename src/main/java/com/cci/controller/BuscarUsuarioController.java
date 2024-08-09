@@ -7,14 +7,17 @@ package com.cci.controller;
 import com.cci.modelo.UsuarioTO;
 import com.cci.servicio.ServicioUsuario;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
+import org.primefaces.model.FilterMeta;
+import org.primefaces.model.MatchMode;
 
 
 /**
@@ -22,71 +25,45 @@ import javax.faces.bean.ViewScoped;
  * @author Usuario
  */
 @ManagedBean(name = "buscarUsuarioController")
-@RequestScoped
-
+@ViewScoped
 public class BuscarUsuarioController implements Serializable {
-@ManagedProperty(value = "#{servicioUsuario}")
-        private ServicioUsuario service;
-        private List<UsuarioTO> usuarios; 
-        private List<UsuarioTO> filteredUsuarios;
-        private boolean globalFilterOnly;
-        private String terminoBusqueda;
 
+        //private ServicioUsuario service;
+        private List<UsuarioTO> usuarios; 
+        private List<UsuarioTO> usuariosFiltrados;
+        private String terminoBusqueda;
+       
+         
     public BuscarUsuarioController() {
     }
-
-        @PostConstruct
-        public void init() {
-            globalFilterOnly = false;
-            // Obtener todos los usuarios de la base de datos
-            usuarios = service.buscarUsuarios(terminoBusqueda); // Llamar al método de búsqueda con un término vacío para obtener todos los usuarios
+    
+     @PostConstruct
+    public void init() {
+         ServicioUsuario servicioUsuario = new ServicioUsuario();
+        if (terminoBusqueda == null || terminoBusqueda.isEmpty()) {
+            // Cargar todos los usuarios
+            usuarios = servicioUsuario.buscarUsuarios("");
+        } else {
+            // Buscar usuarios según el término de búsqueda
+            usuarios = servicioUsuario.buscarUsuarios(terminoBusqueda);
         }
-
-        public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
-            String filterText = (filter == null) ? null : filter.toString().trim().toLowerCase();
-            if (filterText == null || filterText.isEmpty()) {
-                return true;
-            }
-
-            UsuarioTO usuario = (UsuarioTO) value;
-            return usuario.getNombre().toLowerCase().contains(filterText)
-                    || usuario.getCorreo().toLowerCase().contains(filterText);
-        }
-
-        public void toggleGlobalFilter() {
-            setGlobalFilterOnly(!isGlobalFilterOnly());
-        }
-
-        public List<UsuarioTO> getUsuarios() {
-            return usuarios;
-        }
-
-        public void setUsuarios(List<UsuarioTO> usuarios) {
-            this.usuarios = usuarios;
-        }
-
-        public List<UsuarioTO> getFilteredUsuarios() {
-            return filteredUsuarios;
-        }
-
-        public void setFilteredUsuarios(List<UsuarioTO> filteredUsuarios) {
-            this.filteredUsuarios = filteredUsuarios;
-        }
-
-        public boolean isGlobalFilterOnly() {
-            return globalFilterOnly;
-        }
-
-        public void setGlobalFilterOnly(boolean globalFilterOnly) {
-            this.globalFilterOnly = globalFilterOnly;
-        }
-
-    public ServicioUsuario getService() {
-        return service;
+        usuariosFiltrados = new ArrayList<>(usuarios);
     }
 
-    public void setService(ServicioUsuario service) {
-        this.service = service;
+    public List<UsuarioTO> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<UsuarioTO> usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    public List<UsuarioTO> getUsuariosFiltrados() {
+        return usuariosFiltrados;
+    }
+
+    public void setUsuariosFiltrados(List<UsuarioTO> usuariosFiltrados) {
+        this.usuariosFiltrados = usuariosFiltrados;
     }
 
     public String getTerminoBusqueda() {
@@ -96,7 +73,8 @@ public class BuscarUsuarioController implements Serializable {
     public void setTerminoBusqueda(String terminoBusqueda) {
         this.terminoBusqueda = terminoBusqueda;
     }
-        
-    }
-
-
+    
+    
+    
+    
+}

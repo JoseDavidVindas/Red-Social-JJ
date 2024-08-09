@@ -24,29 +24,23 @@ public class UsuarioTO implements Serializable {
     private String contrasena;
     private String nombre;       
     private int rol;  
-    private String fotoPerfil;
     private Date fechaRegistro;
-    private int pais;
+   private PaisTO pais;
 
-    public UsuarioTO(int id, String correo, String contrasena, String nombre, int rol) {
+    public UsuarioTO(int id, String correo, String contrasena, String nombre, int rol, Date fechaRegistro, PaisTO pais) {
         this.id = id;
         this.correo = correo;
         this.contrasena = contrasena;
         this.nombre = nombre;
         this.rol = rol;
-        this.fotoPerfil = fotoPerfil;
         this.fechaRegistro = fechaRegistro;
         this.pais = pais;
     }
-    
-
-  
-    
 
     public UsuarioTO() {
     }
-    
 
+   
     public int getId() {
         return id;
     }
@@ -87,16 +81,6 @@ public class UsuarioTO implements Serializable {
         this.rol = rol;
     }
 
-    
-
-    /*public String getFotoPerfil() {
-        return fotoPerfil;
-    }
-
-    public void setFotoPerfil(String fotoPerfil) {
-        this.fotoPerfil = fotoPerfil;
-    }*/
-
     public Date getFechaRegistro() {
         return fechaRegistro;
     }
@@ -105,32 +89,26 @@ public class UsuarioTO implements Serializable {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public int getPais() {
+    public PaisTO getPais() {
         return pais;
     }
 
-    public void setPais(int pais) {
+    public void setPais(PaisTO pais) {
         this.pais = pais;
     }
     
-     public String getFotoPerfil() {
-        return fotoPerfil;
-    }
 
-    public void setFotoPerfil(String fotoPerfil) {
-        this.fotoPerfil = fotoPerfil;
-    }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 53 * hash + this.id;
-        hash = 53 * hash + Objects.hashCode(this.correo);
-        hash = 53 * hash + Objects.hashCode(this.contrasena);
-        hash = 53 * hash + Objects.hashCode(this.nombre);
-        hash = 53 * hash + this.rol;
-        hash = 53 * hash + Objects.hashCode(this.fechaRegistro);
-        hash = 53 * hash + this.pais;
+        hash = 11 * hash + this.id;
+        hash = 11 * hash + Objects.hashCode(this.correo);
+        hash = 11 * hash + Objects.hashCode(this.contrasena);
+        hash = 11 * hash + Objects.hashCode(this.nombre);
+        hash = 11 * hash + this.rol;
+        hash = 11 * hash + Objects.hashCode(this.fechaRegistro);
+        hash = 11 * hash + Objects.hashCode(this.pais);
         return hash;
     }
 
@@ -152,9 +130,6 @@ public class UsuarioTO implements Serializable {
         if (this.rol != other.rol) {
             return false;
         }
-        if (this.pais != other.pais) {
-            return false;
-        }
         if (!Objects.equals(this.correo, other.correo)) {
             return false;
         }
@@ -164,7 +139,10 @@ public class UsuarioTO implements Serializable {
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
-        return Objects.equals(this.fechaRegistro, other.fechaRegistro);
+        if (!Objects.equals(this.fechaRegistro, other.fechaRegistro)) {
+            return false;
+        }
+        return Objects.equals(this.pais, other.pais);
     }
 
     @Override
@@ -172,6 +150,5 @@ public class UsuarioTO implements Serializable {
         return "UsuarioTO{" + "id=" + id + ", correo=" + correo + ", contrasena=" + contrasena + ", nombre=" + nombre + ", rol=" + rol + ", fechaRegistro=" + fechaRegistro + ", pais=" + pais + '}';
     }
 
-   
-    
+  
 }

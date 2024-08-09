@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Buscar Usuarios</title>
+        <style>
+            .ui-filter-column .ui-column-customfilter .custom-filter {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .ui-custom-filter {
+                width: 100%;
+            }
+            .customer-badge {
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+                font-size: 0.75rem;
+                color: #fff;
+                display: inline-block;
+            }
+            .status-active {
+                background-color: #28a745;
+            }
+            .status-inactive {
+                background-color: #dc3545;
+            }
+        </style>
+    </h:head>
+    <h:body>
+
+
+        <p:dataTable id="TablaUsuario" var="usuario" value="#{buscarUsuarioController.usuarios}" 
+                     widgetVar="TablaUsuario" 
+                     filteredValue="#{buscarUsuarioController.init()}"
+                     paginator="true" rows="10"
+                     emptyMessage="No se encuentran usuarios">
+
+            <p:column headerText="Nombre" sortBy="#{usuario.nombre}" filterBy="#{usuario.nombre}" filterMatchMode="contains">
+                <h:outputText value="#{usuario.nombre}" />
+            </p:column>
+
+            <p:column headerText="Correo" sortBy="#{usuario.correo}" filterBy="#{usuario.correo}" filterMatchMode="contains">
+                <h:outputText value="#{usuario.correo}" />
+            </p:column>
+
+            <p:column headerText="Pais" sortBy="#{usuario.pais.nombre}" filterBy="#{usuario.pais.nombre}">
+                <h:graphicImage 
+                    value="#{resources['Banderas/' + usuario.pais.imagen]}" 
+                    style="width: 30px; height: 20px;"/>
+                <h:outputText style="vertical-align: middle; margin-left: .5rem" value="#{usuario.pais.nombre}" />
+            </p:column>
+
+
+            <p:column headerText="Fecha de Registro" sortBy="#{usuario.fechaRegistro}" filterBy="#{usuario.fechaRegistro}" filterMatchMode="between">
+                <f:facet name="filter">
+                    <p:datePicker selectionMode="range" id="fechaRegistro" />
+                </f:facet>
+                <h:outputText value="#{usuario.fechaRegistro}" />
+            </p:column>
+
+            <p:column headerText="Rol" filterBy="#{usuario.rol}" filterMatchMode="exact">
+                <f:facet name="filter">
+                    <h:selectOneMenu id="rol" value="#{usuario.rol}" required="true">
+                        <f:selectItem itemValue="1" itemLabel="Profesor" />
+                        <f:selectItem itemValue="2" itemLabel="Estudiante" />
+
+                    </h:selectOneMenu>
+                </f:facet>
+
+                <h:outputText value="#{usuario.rol == 1 ? 'Profesor' : 'Estudiante'}" />
+            </p:column>
+
+        </p:dataTable>
+    </h:body>
+</html>
